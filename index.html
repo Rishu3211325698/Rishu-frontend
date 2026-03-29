@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>RISHU BIND MANAGER PRO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 30, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #7c3aed, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulseGlow 1.5s infinite;
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.6);
+        }
+
+        .loading-circle span {
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 0 8px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.7);}
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(124, 58, 237, 0);}
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);}
+        }
+
+        .loading-text {
+            margin-top: 25px;
+            font-size: 18px;
+            color: #c4b5fd;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        /* Main container */
+        .glass-card {
+            background: rgba(20, 25, 45, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            width: 100%;
+            max-width: 1300px;
+            padding: 25px 30px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.4);
+            transition: all 0.3s;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            background: linear-gradient(135deg, #c084fc, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+
+        .user-area {
+            background: rgba(0,0,0,0.4);
+            padding: 8px 16px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-key {
+            font-family: monospace;
+            background: #1e293b;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: scale(0.96);
+        }
+
+        /* action grid */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .action-card {
+            background: rgba(15, 20, 35, 0.6);
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            transition: all 0.2s;
+        }
+
+        .action-card:hover {
+            border-color: rgba(124, 58, 237, 0.6);
+            background: rgba(25, 30, 50, 0.7);
+        }
+
+        .action-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-title i {
+            font-size: 24px;
+            color: #a855f7;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 10px 14px;
+            border-radius: 16px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: #a855f7;
+        }
+
+        button {
+            background: linear-gradient(95deg, #7c3aed, #a855f7);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 18px;
+            border-radius: 28px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        button:active {
+            transform: scale(0.97);
+        }
+
+        .method-select {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .method-btn {
+            background: #1e293b;
+            color: #cbd5e1;
+            padding: 6px 12px;
+            font-size: 12px;
+            margin-top: 0;
+        }
+
+        .method-btn.active {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .output-area {
+            background: #0a0f1a;
+            border-radius: 24px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #2d3a5e;
+        }
+
+        .output-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #c084fc;
+            margin-bottom: 12px;
+        }
+
+        pre {
+            background: #030614;
+            padding: 15px;
+            border-radius: 16px;
+            overflow-x: auto;
+            font-size: 13px;
+            color: #e2e8f0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #64748b;
+            border-top: 1px solid rgba(124,58,237,0.2);
+            padding-top: 18px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: #22c55e20;
+            color: #4ade80;
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 700px) {
+            .glass-card {
+                padding: 15px;
+            }
+            .action-title {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-circle">
+        <span>RISHU</span>
+    </div>
+    <div class="loading-text">INITIALIZING SECURE VAULT...</div>
+</div>
+
+<!-- Main App (hidden until login) -->
+<div id="appContainer" style="display: none;">
+    <div class="glass-card">
+        <div class="header">
+            <div class="logo">
+                <h1>⚡ RISHU BIND MANAGER PRO</h1>
+                <p>Created by <strong style="color:#a855f7;">RISHU</strong> | Ultimate Account Recovery Tool</p>
+            </div>
+            <div class="user-area">
+                <span class="user-key" id="userKeyDisplay"></span>
+                <button class="logout-btn" id="logoutBtn">LOGOUT</button>
+            </div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="actions-grid">
+            <!-- 1. Bind New Email -->
+            <div class="action-card">
+                <div class="action-title"><i>🔗</i> Bind New Email</div>
+                <div class="input-group">
+                    <label>Access Token</label>
+                    <input type="text" id="bindToken" placeholder="Enter access token">
+                </div>
+                <div class="input-group">
+                    <label>New Email</label>
+                    <input type="email" id="bindEmail" placeholder="recovery@example.com">
+                </div>
+                <button id="bindBtn">Start Binding</button>
+            </div>
+
+            <!-- 2. Cancel Request -->
+            <div class="action-card">
+                <div class="action-title"><i>❌</i> Cancel Request</div>
+                <div class="input-group">
+                    <label>Access Token</label>
+                    <input type="text" id="cancelToken" placeholder="Enter access token">
+                </div>
+                <button id="cancelBtn">Cancel Pending</button>
+            </div>
+
+            <!-- 3. Unbind (with/without security code) -->
+            <div class="action-card">
+                <div class="action-title"><i>🚫</i> Unbind Email</div>
+                <div class="method-select" id="unbindMethodSelect">
+                    <button data-method="sec" class="method-btn active">Security Code</button>
+                    <button data-method="otp" class="method-btn">Email OTP</button>
+                </div>
+                <div class="input-group">
+                    <label>Access Token</label>
+                    <input type="text" id="unbindToken" placeholder="Access token">
+                </div>
+                <div id="unbindDynamicFields">
+                    <div class="input-group">
+                        <label>Security Code</label>
+                        <input type="text" id="unbindSecCode" placeholder="Security code">
+                    </div>
+                </div>
+                <button id="unbindBtn">Unbind</button>
+            </div>
+
+            <!-- 4. Change Email (two methods) -->
+            <div class="action-card">
+                <div class="action-title"><i>🔄</i> Change Email</div>
+                <div class="method-select" id="changeMethodSelect">
+                    <button data-method="otpBoth" class="method-btn active">Both OTP</button>
+                    <button data-method="secOtp" class="method-btn">Sec + OTP</button>
+                </div>
+                <div class="input-group">
+                    <label>Access Token</label>
+                    <input type="text" id="changeToken" placeholder="Access token">
+                </div>
+                <div class="input-group">
+                    <label>Current Email</label>
+                    <input type="email" id="oldEmail" placeholder="Current email">
+                </div>
+                <div class="input-group">
+                    <label>New Email</label>
+                    <input type="email" id="newEmail" placeholder="New email">
+                </div>
+                <div id="changeDynamicFields"></div>
+                <button id="changeBtn">Start Change</button>
+            </div>
+
+            <!-- 5. Check Bind Info -->
+            <div class="action-card">
+                <div class="action-title"><i>📋</i> Check Bind Info</div>
+                <div class="input-group">
+                    <label>Access Token</label>
+                    <input type="text" id="infoToken" placeholder="Access token">
+                </div>
+                <button id="infoBtn">Check Status</button>
+            </div>
+
+            <!-- 6. Linked Platforms -->
+            <div class="action-card">
+                <div class="action-title"><i>🌐</i> Linked Platforms</div>
+                <div class="input-group">
+                    <label>Access Token</label>
+                    <input type="text" id="platformToken" placeholder="Access token">
+                </div>
+                <button id="platformBtn">Fetch Platforms</button>
+            </div>
+        </div>
+
+        <!-- Output Console -->
+        <div class="output-area">
+            <div class="output-header">📟 RESPONSE CONSOLE</div>
+            <pre id="outputPre">Waiting for actions...</pre>
+        </div>
+        <div class="footer">
+            © 2025 RISHU BIND MANAGER | Protected by Admin Key System | All operations secured
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= CONFIGURATION =======================
+    // Replace with your actual Vercel API base URL
+    const API_BASE_URL = "https://official-rishu-bind.vercel.app/api";   // CHANGE THIS
+    // Predefined admin keys (admin can add/remove). In production, validate via backend.
+    const VALID_KEYS = new Set([
+        "ADMIN-RISHU-2025",
+        "PREMIUM-KEY-001",
+        "BIND-MASTER-99"
+    ]);
+
+    // Global state
+    let currentUserKey = null;
+
+    // Helper: show/hide loading overlay
+    function showLoading(text = "PROCESSING...") {
+        const overlay = document.getElementById('loadingOverlay');
+        const loadingText = overlay.querySelector('.loading-text');
+        loadingText.innerText = text;
+        overlay.style.display = 'flex';
+        overlay.style.opacity = '1';
+    }
+    function hideLoading() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+
+    // Output to console
+    function appendOutput(data, isError = false) {
+        const pre = document.getElementById('outputPre');
+        const timestamp = new Date().toLocaleTimeString();
+        let text = typeof data === 'object' ? JSON.stringify(data, null, 2) : String(data);
+        if (isError) text = `❌ ERROR: ${text}`;
+        pre.innerHTML = `[${timestamp}]\n${text}\n\n` + pre.innerHTML;
+    }
+
+    // Generic API caller
+    async function callApi(endpoint, payload) {
+        const url = `${API_BASE_URL}/${endpoint}`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': currentUserKey
+            },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        return await response.json();
+    }
+
+    // ----- Specific implementations -----
+    // Bind new email (full flow)
+    async function bindNewEmail(token, email) {
+        // Step1: send OTP
+        appendOutput({ step: "Sending OTP", email });
+        const sendRes = await callApi("send-otp", { app_id: "100067", access_token: token, email, locale: "en_MA" });
+        if (sendRes.result !== 0) throw new Error(`OTP send failed: ${JSON.stringify(sendRes)}`);
+        const otp = prompt("Enter OTP sent to " + email);
+        if (!otp) throw new Error("OTP required");
+        // Step2: verify OTP
+        const verifyRes = await callApi("verify-otp", { app_id: "100067", access_token: token, email, otp });
+        const verifier = verifyRes.verifier_token;
+        if (!verifier) throw new Error(`OTP verify failed: ${JSON.stringify(verifyRes)}`);
+        // Step3: set security code (hardcoded default, user can change)
+        const secCode = prompt("Set a security code for this bind (will be hashed)") || "DefaultSecure123";
+        const hashed = await sha256(secCode);
+        const bindRes = await callApi("bind", { app_id: "100067", access_token: token, verifier_token: verifier, secondary_password: hashed.toUpperCase(), email });
+        return bindRes;
+    }
+
+    // Cancel pending
+    async function cancelRequest(token) {
+        return await callApi("cancel", { app_id: "100067", access_token: token });
+    }
+
+    // Unbind (two methods)
+    async function unbindEmail(token, method, secCodeOrEmail) {
+        let identityToken = null;
+        if (method === "sec") {
+            const hashed = await sha256(secCodeOrEmail);
+            const identityRes = await callApi("verify-identity", { app_id: "100067", access_token: token, email: "", secondary_password: hashed.toUpperCase() });
+            if (!identityRes.identity_token) throw new Error(`Identity verification failed: ${JSON.stringify(identityRes)}`);
+            identityToken = identityRes.identity_token;
+        } else {
+            // OTP method: send OTP to email, then verify
+            const email = secCodeOrEmail;
+            await callApi("send-otp", { app_id: "100067", access_token: token, email, locale: "en_MA" });
+            const otp = prompt("Enter OTP sent to " + email);
+            const identityRes = await callApi("verify-identity", { app_id: "100067", access_token: token, email, otp });
+            if (!identityRes.identity_token) throw new Error(`OTP identity failed: ${JSON.stringify(identityRes)}`);
+            identityToken = identityRes.identity_token;
+        }
+        const unbindRes = await callApi("unbind", { app_id: "100067", access_token: token, identity_token: identityToken });
+        return unbindRes;
+    }
+
+    // Change email: two subtypes
+    async function changeEmail(token, currentEmail, newEmail, method) {
+        if (method === "otpBoth") {
+            // Step: verify old email via OTP
+            await callApi("send-otp", { app_id: "100067", access_token: token, email: currentEmail, locale: "en_MA" });
+            const otpOld = prompt("Enter OTP from current email");
+            const identityRes = await callApi("verify-identity", { app_id: "100067", access_token: token, email: currentEmail, otp: otpOld });
+            if (!identityRes.identity_token) throw new Error("Old email verification failed");
+            const identityToken = identityRes.identity_token;
+            // verify new email OTP
+            await callApi("send-otp", { app_id: "100067", access_token: token, email: newEmail, locale: "en_MA" });
+            const otpNew = prompt("Enter OTP from new email");
+            const verifyNew = await callApi("verify-otp", { app_id: "100067", access_token: token, email: newEmail, otp: otpNew });
+            if (!verifyNew.verifier_token) throw new Error("New email OTP failed");
+            const rebindRes = await callApi("rebind", { app_id: "100067", access_token: token, identity_token: identityToken, verifier_token: verifyNew.verifier_token, email: newEmail });
+            return rebindRes;
+        } else {
+            // sec + OTP method
+            const secCode = prompt("Enter your security code (secondary password)");
+            const hashedSec = await sha256(secCode);
+            const identityRes = await callApi("verify-identity", { app_id: "100067", access_token: token, email: currentEmail, secondary_password: hashedSec.toUpperCase() });
+            if (!identityRes.identity_token) throw new Error("Security code verification failed");
+            const identityToken = identityRes.identity_token;
+            // send OTP to new email
+            await callApi("send-otp", { app_id: "100067", access_token: token, email: newEmail, locale: "en_MA" });
+            const otpNew = prompt("Enter OTP from new email");
+            const verifyNew = await callApi("verify-otp", { app_id: "100067", access_token: token, email: newEmail, otp: otpNew });
+            if (!verifyNew.verifier_token) throw new Error("New email OTP failed");
+            const rebindRes = await callApi("rebind", { app_id: "100067", access_token: token, identity_token: identityToken, verifier_token: verifyNew.verifier_token, email: newEmail });
+            return rebindRes;
+        }
+    }
+
+    async function getBindInfo(token) {
+        const url = `${API_BASE_URL}/get-bind-info?access_token=${token}&app_id=100067`;
+        const response = await fetch(url, { headers: { 'x-api-key': currentUserKey } });
+        if (!response.ok) throw new Error("Info fetch failed");
+        return await response.json();
+    }
+
+    async function getPlatforms(token) {
+        const url = `${API_BASE_URL}/get-platforms?access_token=${token}`;
+        const response = await fetch(url, { headers: { 'x-api-key': currentUserKey } });
+        if (!response.ok) throw new Error("Platforms fetch failed");
+        return await response.json();
+    }
+
+    // simple SHA-256 (for demo)
+    async function sha256(message) {
+        const msgBuffer = new TextEncoder().encode(message);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // UI event binding
+    function bindEvents() {
+        document.getElementById('bindBtn').onclick = async () => {
+            const token = document.getElementById('bindToken').value.trim();
+            const email = document.getElementById('bindEmail').value.trim();
+            if (!token || !email) return appendOutput("Missing token/email", true);
+            showLoading("Binding new email...");
+            try {
+                const result = await bindNewEmail(token, email);
+                appendOutput(result);
+            } catch (err) { appendOutput(err.message, true); }
+            finally { hideLoading(); }
+        };
+        document.getElementById('cancelBtn').onclick = async () => {
+            const token = document.getElementById('cancelToken').value.trim();
+            if (!token) return appendOutput("Token required", true);
+            showLoading("Cancelling...");
+            try {
+                const res = await cancelRequest(token);
+                appendOutput(res);
+            } catch (err) { appendOutput(err.message, true); }
+            finally { hideLoading(); }
+        };
+        // Unbind method toggle
+        const unbindMethodBtns = document.querySelectorAll('#unbindMethodSelect .method-btn');
+        let unbindMethod = "sec";
+        unbindMethodBtns.forEach(btn => {
+            btn.onclick = () => {
+                unbindMethodBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                unbindMethod = btn.dataset.method;
+                const container = document.getElementById('unbindDynamicFields');
+                if (unbindMethod === "sec") {
+                    container.innerHTML = `<div class="input-group"><label>Security Code</label><input type="text" id="unbindSecCode" placeholder="Security code"></div>`;
+                } else {
+                    container.innerHTML = `<div class="input-group"><label>Current Email</label><input type="email" id="unbindEmail" placeholder="Email to receive OTP"></div>`;
+                }
+            };
+        });
+        document.getElementById('unbindBtn').onclick = async () => {
+            const token = document.getElementById('unbindToken').value.trim();
+            if (!token) return appendOutput("Token required", true);
+            let secOrEmail;
+            if (unbindMethod === "sec") {
+                secOrEmail = document.getElementById('unbindSecCode')?.value.trim();
+                if (!secOrEmail) return appendOutput("Security code required", true);
+            } else {
+                secOrEmail = document.getElementById('unbindEmail')?.value.trim();
+                if (!secOrEmail) return appendOutput("Email required", true);
+            }
+            showLoading("Unbinding...");
+            try {
+                const res = await unbindEmail(token, unbindMethod, secOrEmail);
+                appendOutput(res);
+            } catch (err) { appendOutput(err.message, true); }
+            finally { hideLoading(); }
+        };
+        // Change email method toggle
+        let changeMethod = "otpBoth";
+        const changeBtns = document.querySelectorAll('#changeMethodSelect .method-btn');
+        changeBtns.forEach(btn => {
+            btn.onclick = () => {
+                changeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                changeMethod = btn.dataset.method;
+                const dynDiv = document.getElementById('changeDynamicFields');
+                if (changeMethod === "secOtp") {
+                    dynDiv.innerHTML = `<div class="input-group"><label>Security Code</label><input type="text" id="changeSecCode" placeholder="Your security code"></div>`;
+                } else {
+                    dynDiv.innerHTML = "";
+                }
+            };
+        });
+        document.getElementById('changeBtn').onclick = async () => {
+            const token = document.getElementById('changeToken').value.trim();
+            const oldEmail = document.getElementById('oldEmail').value.trim();
+            const newEmail = document.getElementById('newEmail').value.trim();
+            if (!token || !oldEmail || !newEmail) return appendOutput("Missing fields", true);
+            let secCode = null;
+            if (changeMethod === "secOtp") {
+                secCode = document.getElementById('changeSecCode')?.value.trim();
+                if (!secCode) return appendOutput("Security code required", true);
+            }
+            showLoading("Changing email...");
+            try {
+                const res = await changeEmail(token, oldEmail, newEmail, changeMethod);
+                appendOutput(res);
+            } catch (err) { appendOutput(err.message, true); }
+            finally { hideLoading(); }
+        };
+        document.getElementById('infoBtn').onclick = async () => {
+            const token = document.getElementById('infoToken').value.trim();
+            if (!token) return appendOutput("Token required", true);
+            showLoading("Fetching bind info...");
+            try {
+                const res = await getBindInfo(token);
+                appendOutput(res);
+            } catch (err) { appendOutput(err.message, true); }
+            finally { hideLoading(); }
+        };
+        document.getElementById('platformBtn').onclick = async () => {
+            const token = document.getElementById('platformToken').value.trim();
+            if (!token) return appendOutput("Token required", true);
+            showLoading("Fetching platforms...");
+            try {
+                const res = await getPlatforms(token);
+                appendOutput(res);
+            } catch (err) { appendOutput(err.message, true); }
+            finally { hideLoading(); }
+        };
+        document.getElementById('logoutBtn').onclick = () => {
+            localStorage.removeItem('bindUserKey');
+            currentUserKey = null;
+            document.getElementById('appContainer').style.display = 'none';
+            showLoginScreen();
+        };
+    }
+
+    // Login handling
+    function showLoginScreen() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.display = 'flex';
+        overlay.querySelector('.loading-text').innerText = "ENTER YOUR LICENSE KEY";
+        overlay.style.opacity = '1';
+        // create login UI if not exists
+        let loginBox = document.getElementById('loginBox');
+        if (!loginBox) {
+            loginBox = document.createElement('div');
+            loginBox.id = 'loginBox';
+            loginBox.style.cssText = 'background:#0f172a; padding:30px; border-radius:28px; text-align:center; width:320px; border:1px solid #7c3aed;';
+            loginBox.innerHTML = `
+                <h2 style="color:#c084fc; margin-bottom:20px;">🔐 RISHU ACCESS</h2>
+                <input type="text" id="licenseKey" placeholder="Enter your license key" style="width:100%; padding:12px; border-radius:40px; background:#1e293b; border:none; color:white; margin-bottom:20px;">
+                <button id="loginSubmitBtn" style="background:#7c3aed;">AUTHENTICATE</button>
+                <p style="margin-top:15px; font-size:12px; color:#94a3b8;">Contact @Rishu for keys</p>
+            `;
+            overlay.innerHTML = '';
+            overlay.appendChild(loginBox);
+            const loginBtn = document.getElementById('loginSubmitBtn');
+            loginBtn.onclick = () => {
+                const key = document.getElementById('licenseKey').value.trim();
+                if (VALID_KEYS.has(key)) {
+                    currentUserKey = key;
+                    localStorage.setItem('bindUserKey', key);
+                    document.getElementById('userKeyDisplay').innerText = key.slice(0,12)+'...';
+                    overlay.style.display = 'none';
+                    document.getElementById('appContainer').style.display = 'block';
+                } else {
+                    alert("Invalid key! Access denied.");
+                }
+            };
+        } else {
+            overlay.innerHTML = '';
+            overlay.appendChild(loginBox);
+        }
+    }
+
+    // on load
+    window.onload = () => {
+        const savedKey = localStorage.getItem('bindUserKey');
+        if (savedKey && VALID_KEYS.has(savedKey)) {
+            currentUserKey = savedKey;
+            document.getElementById('userKeyDisplay').innerText = savedKey.slice(0,12)+'...';
+            document.getElementById('appContainer').style.display = 'block';
+            hideLoading();
+            bindEvents();
+        } else {
+            showLoginScreen();
+        }
+    };
+</script>
+</body>
+</html>

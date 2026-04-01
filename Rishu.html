@@ -7,490 +7,63 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Orbitron', monospace;
-            background: radial-gradient(circle at 20% 50%, #0a0a0a, #030303);
-            color: #00ff00;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Glassmorphism Effect */
-        .glass {
-            background: rgba(15, 25, 15, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(0, 255, 0, 0.2);
-        }
-
-        .glow-text {
-            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px rgba(0, 255, 0, 0.5);
-        }
-
-        .glow-border {
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3), inset 0 0 5px rgba(0, 255, 0, 0.1);
-        }
-
-        .gradient-btn {
-            background: linear-gradient(135deg, #00ff00, #00aa00);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .gradient-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-        }
-
-        .gradient-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Auth Container */
-        .auth-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.98);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all 0.5s ease;
-        }
-
-        .auth-box {
-            background: rgba(10, 20, 10, 0.9);
-            border: 2px solid #00ff00;
-            border-radius: 25px;
-            padding: 45px;
-            width: 90%;
-            max-width: 480px;
-            animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            box-shadow: 0 0 50px rgba(0, 255, 0, 0.2);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        .auth-tabs {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 35px;
-            border-bottom: 2px solid #00ff00;
-        }
-
-        .auth-tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .auth-tab.active {
-            background: #00ff00;
-            color: #000;
-            border-radius: 10px 10px 0 0;
-            text-shadow: none;
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-            animation: fadeIn 0.4s;
-        }
-
-        .input-group {
-            margin-bottom: 22px;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 11px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #88ff88;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 14px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            font-family: 'Orbitron', monospace;
-            border-radius: 10px;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .input-group input:focus {
-            outline: none;
-            box-shadow: 0 0 15px #00ff00;
-            border-color: #00ff00;
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #00ff00, #00aa00);
-            color: #000;
-            border: none;
-            font-family: 'Orbitron', monospace;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 10px;
-            transition: all 0.3s;
-            font-size: 16px;
-            letter-spacing: 2px;
-        }
-
-        /* Dashboard */
-        .dashboard {
-            display: none;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 280px;
-            height: 100vh;
-            background: rgba(5, 10, 5, 0.95);
-            backdrop-filter: blur(10px);
-            border-right: 2px solid #00ff00;
-            padding: 30px 20px;
-            transform: translateX(-100%);
-            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            z-index: 100;
-            overflow-y: auto;
-        }
-
-        .sidebar.open {
-            transform: translateX(0);
-        }
-
-        .sidebar-header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #00ff00;
-        }
-
-        .sidebar-header h2 {
-            font-size: 24px;
-            letter-spacing: 3px;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 12px;
-        }
-
-        .sidebar-menu a {
-            color: #00ff00;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            padding: 14px 18px;
-            border-radius: 12px;
-            transition: all 0.3s;
-            font-size: 13px;
-            letter-spacing: 1px;
-        }
-
-        .sidebar-menu a i {
-            margin-right: 15px;
-            width: 24px;
-            font-size: 18px;
-        }
-
-        .sidebar-menu a:hover, .sidebar-menu a.active {
-            background: linear-gradient(135deg, #00ff00, #00aa00);
-            color: #000;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-            transform: translateX(5px);
-        }
-
-        .menu-toggle {
-            position: fixed;
-            left: 20px;
-            top: 20px;
-            z-index: 101;
-            background: linear-gradient(135deg, #00ff00, #00aa00);
-            color: #000;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 22px;
-            transition: all 0.3s;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-        }
-
-        .main-content {
-            margin-left: 0;
-            padding: 90px 25px 25px 25px;
-            transition: margin-left 0.4s;
-        }
-
-        .main-content.sidebar-open {
-            margin-left: 280px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content.sidebar-open {
-                margin-left: 0;
-            }
-        }
-
-        /* Cards Grid */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-
-        .tool-card {
-            background: rgba(10, 20, 10, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 255, 0, 0.3);
-            border-radius: 20px;
-            padding: 25px;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-5px);
-            border-color: #00ff00;
-            box-shadow: 0 10px 30px rgba(0, 255, 0, 0.2);
-        }
-
-        .tool-card i {
-            font-size: 40px;
-            margin-bottom: 15px;
-            color: #00ff00;
-        }
-
-        .tool-card h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .tool-card p {
-            font-size: 12px;
-            color: #88ff88;
-            opacity: 0.8;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: #0a0f0a;
-            border: 2px solid #00ff00;
-            border-radius: 25px;
-            width: 90%;
-            max-width: 550px;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 30px;
-            animation: modalSlideIn 0.3s;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #00ff00;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: #ff4444;
-            font-size: 28px;
-            cursor: pointer;
-        }
-
-        .console-output {
-            margin-top: 20px;
-            background: #000;
-            border: 1px solid #00ff00;
-            border-radius: 12px;
-            padding: 15px;
-            font-family: monospace;
-            font-size: 12px;
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .console-line {
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
-            animation: slideIn 0.2s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .copy-btn {
-            background: #1a2a1a;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-            margin-top: 10px;
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #00ff00;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 10px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #0f0f0f;
-            border: 1px solid #00ff00;
-            padding: 15px 25px;
-            border-radius: 12px;
-            z-index: 3000;
-            animation: slideInRight 0.3s ease;
-            font-size: 14px;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(100px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .method-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .method-btn {
-            flex: 1;
-            padding: 10px;
-            background: #1a2a1a;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            cursor: pointer;
-            border-radius: 10px;
-            font-family: 'Orbitron', monospace;
-            transition: all 0.3s;
-        }
-
-        .method-btn.active {
-            background: #00ff00;
-            color: #000;
-        }
-
-        .logout-btn {
-            margin-top: 30px;
-            background: linear-gradient(135deg, #ff4444, #aa0000);
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00ff00;
-            border-radius: 4px;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Orbitron', monospace; background: radial-gradient(circle at 20% 50%, #0a0a0a, #030303); color: #00ff00; overflow-x: hidden; min-height: 100vh; }
+        .glass { background: rgba(15, 25, 15, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(0, 255, 0, 0.2); }
+        .glow-text { text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px rgba(0, 255, 0, 0.5); }
+        .gradient-btn { background: linear-gradient(135deg, #00ff00, #00aa00); transition: all 0.3s ease; }
+        .gradient-btn:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(0, 255, 0, 0.5); }
+        .auth-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.98); backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .auth-box { background: rgba(10, 20, 10, 0.9); border: 2px solid #00ff00; border-radius: 25px; padding: 45px; width: 90%; max-width: 480px; animation: fadeInUp 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .auth-tabs { display: flex; gap: 20px; margin-bottom: 35px; border-bottom: 2px solid #00ff00; }
+        .auth-tab { flex: 1; text-align: center; padding: 12px; cursor: pointer; transition: all 0.3s; font-weight: bold; }
+        .auth-tab.active { background: #00ff00; color: #000; border-radius: 10px 10px 0 0; }
+        .auth-form { display: none; }
+        .auth-form.active { display: block; animation: fadeIn 0.4s; }
+        .input-group { margin-bottom: 22px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #88ff88; }
+        .input-group input { width: 100%; padding: 14px; background: rgba(0, 0, 0, 0.6); border: 1px solid #00ff00; color: #00ff00; font-family: 'Orbitron', monospace; border-radius: 10px; }
+        .input-group input:focus { outline: none; box-shadow: 0 0 15px #00ff00; }
+        .auth-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #00ff00, #00aa00); color: #000; border: none; font-family: 'Orbitron', monospace; font-weight: bold; cursor: pointer; border-radius: 10px; font-size: 16px; letter-spacing: 2px; }
+        .dashboard { display: none; min-height: 100vh; }
+        .sidebar { position: fixed; left: 0; top: 0; width: 280px; height: 100vh; background: rgba(5, 10, 5, 0.95); backdrop-filter: blur(10px); border-right: 2px solid #00ff00; padding: 30px 20px; transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 100; overflow-y: auto; }
+        .sidebar.open { transform: translateX(0); }
+        .sidebar-header { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 2px solid #00ff00; }
+        .sidebar-header h2 { font-size: 24px; letter-spacing: 3px; }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 12px; }
+        .sidebar-menu a { color: #00ff00; text-decoration: none; display: flex; align-items: center; padding: 14px 18px; border-radius: 12px; transition: all 0.3s; font-size: 13px; }
+        .sidebar-menu a i { margin-right: 15px; width: 24px; font-size: 18px; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: linear-gradient(135deg, #00ff00, #00aa00); color: #000; box-shadow: 0 0 15px rgba(0, 255, 0, 0.5); transform: translateX(5px); }
+        .menu-toggle { position: fixed; left: 20px; top: 20px; z-index: 101; background: linear-gradient(135deg, #00ff00, #00aa00); color: #000; border: none; width: 50px; height: 50px; border-radius: 12px; cursor: pointer; font-size: 22px; }
+        .main-content { margin-left: 0; padding: 90px 25px 25px 25px; transition: margin-left 0.4s; }
+        .main-content.sidebar-open { margin-left: 280px; }
+        @media (max-width: 768px) { .main-content.sidebar-open { margin-left: 0; } }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 20px; }
+        .tool-card { background: rgba(10, 20, 10, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); border-radius: 20px; padding: 25px; transition: all 0.3s; cursor: pointer; }
+        .tool-card:hover { transform: translateY(-5px); border-color: #00ff00; box-shadow: 0 10px 30px rgba(0, 255, 0, 0.2); }
+        .tool-card i { font-size: 40px; margin-bottom: 15px; color: #00ff00; }
+        .tool-card h3 { font-size: 18px; margin-bottom: 10px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: #0a0f0a; border: 2px solid #00ff00; border-radius: 25px; width: 90%; max-width: 550px; max-height: 80vh; overflow-y: auto; padding: 30px; animation: modalSlideIn 0.3s; }
+        @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #00ff00; }
+        .close-modal { background: none; border: none; color: #ff4444; font-size: 28px; cursor: pointer; }
+        .console-output { margin-top: 20px; background: #000; border: 1px solid #00ff00; border-radius: 12px; padding: 15px; font-family: monospace; font-size: 12px; max-height: 250px; overflow-y: auto; }
+        .console-line { padding: 6px 0; border-bottom: 1px solid rgba(0, 255, 0, 0.1); animation: slideIn 0.2s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .copy-btn { background: #1a2a1a; border: 1px solid #00ff00; color: #00ff00; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; margin-top: 10px; }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid #00ff00; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 10px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .toast { position: fixed; bottom: 30px; right: 30px; background: #0f0f0f; border: 1px solid #00ff00; padding: 15px 25px; border-radius: 12px; z-index: 3000; animation: slideInRight 0.3s ease; }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+        .method-selector { display: flex; gap: 12px; margin-bottom: 20px; }
+        .method-btn { flex: 1; padding: 10px; background: #1a2a1a; border: 1px solid #00ff00; color: #00ff00; cursor: pointer; border-radius: 10px; font-family: 'Orbitron', monospace; }
+        .method-btn.active { background: #00ff00; color: #000; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #00ff00; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -502,15 +75,15 @@
             <div class="auth-tab" data-tab="register">📝 CREATE ACCOUNT</div>
         </div>
         <div id="loginForm" class="auth-form active">
-            <div class="input-group"><label><i class="fas fa-user"></i> USERNAME</label><input type="text" id="loginUsername" placeholder="Enter username"></div>
-            <div class="input-group"><label><i class="fas fa-lock"></i> PASSWORD</label><input type="password" id="loginPassword" placeholder="Enter password"></div>
+            <div class="input-group"><label>USERNAME</label><input type="text" id="loginUsername" placeholder="Enter username"></div>
+            <div class="input-group"><label>PASSWORD</label><input type="password" id="loginPassword" placeholder="Enter password"></div>
             <button class="auth-btn gradient-btn" onclick="handleLogin()">ACCESS SYSTEM →</button>
         </div>
         <div id="registerForm" class="auth-form">
-            <div class="input-group"><label><i class="fas fa-user"></i> USERNAME</label><input type="text" id="regUsername" placeholder="Choose username"></div>
-            <div class="input-group"><label><i class="fas fa-envelope"></i> EMAIL</label><input type="email" id="regEmail" placeholder="Enter email"></div>
-            <div class="input-group"><label><i class="fas fa-lock"></i> PASSWORD</label><input type="password" id="regPassword" placeholder="Create password"></div>
-            <div class="input-group"><label><i class="fas fa-check-circle"></i> CONFIRM</label><input type="password" id="regConfirm" placeholder="Confirm password"></div>
+            <div class="input-group"><label>USERNAME</label><input type="text" id="regUsername" placeholder="Choose username"></div>
+            <div class="input-group"><label>EMAIL</label><input type="email" id="regEmail" placeholder="Enter email"></div>
+            <div class="input-group"><label>PASSWORD</label><input type="password" id="regPassword" placeholder="Create password"></div>
+            <div class="input-group"><label>CONFIRM</label><input type="password" id="regConfirm" placeholder="Confirm password"></div>
             <button class="auth-btn gradient-btn" onclick="handleRegister()">CREATE ACCOUNT →</button>
         </div>
     </div>
@@ -546,9 +119,62 @@
 </div>
 
 <script>
+    // ==================== CONFIGURATION ====================
+    const API_BASE_URL = "https://rishu-advance-bind.vercel.app/api";
     let currentUser = null;
     let currentMethod = { unbind: 'sec', change: 'otp' };
 
+    // ==================== API CALL FUNCTIONS ====================
+    async function callApi(endpoint, params = {}) {
+        const url = `${API_BASE_URL}/${endpoint}`;
+        const queryString = new URLSearchParams(params).toString();
+        const fullUrl = queryString ? `${url}?${queryString}` : url;
+        
+        try {
+            const response = await fetch(fullUrl, { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+            return await response.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+
+    async function sendOtp(token, email) {
+        return await callApi("send-otp", { access_token: token, email, app_id: "100067" });
+    }
+
+    async function bindEmail(token, email, otp, secCode) {
+        return await callApi("bind", { access_token: token, email, otp, secondary_password: secCode, app_id: "100067" });
+    }
+
+    async function getBindInfo(token) {
+        return await callApi("get-bind-info", { access_token: token, app_id: "100067" });
+    }
+
+    async function cancelRequest(token) {
+        return await callApi("cancel", { access_token: token, app_id: "100067" });
+    }
+
+    async function unbindWithSec(token, secCode) {
+        return await callApi("unbind-with-sec", { access_token: token, secondary_password: secCode, app_id: "100067" });
+    }
+
+    async function unbindWithOtp(token, email, otp) {
+        return await callApi("unbind-with-otp", { access_token: token, email, otp, app_id: "100067" });
+    }
+
+    async function changeEmailOtp(token, oldEmail, newEmail, oldOtp, newOtp) {
+        return await callApi("change-email-otp", { access_token: token, old_email: oldEmail, new_email: newEmail, old_otp: oldOtp, new_otp: newOtp, app_id: "100067" });
+    }
+
+    async function changeEmailSec(token, oldEmail, newEmail, secCode, newOtp) {
+        return await callApi("change-email-sec", { access_token: token, old_email: oldEmail, new_email: newEmail, secondary_password: secCode, new_otp: newOtp, app_id: "100067" });
+    }
+
+    async function eatToAccessToken(eatToken) {
+        return await callApi("eat-token-access-token", { eat_token: eatToken });
+    }
+
+    // ==================== UI HELPERS ====================
     function showToast(msg, type) {
         const toast = document.createElement('div');
         toast.className = 'toast';
@@ -571,48 +197,11 @@
         await delay(100);
     }
 
-    async function simulateOperation(type, data, consoleDiv) {
-        await addConsoleLine(consoleDiv, '[⟳] Initializing secure connection...', 'info');
-        await delay(400);
-        await addConsoleLine(consoleDiv, '[⟳] Connecting to RISHU API...', 'info');
-        await delay(400);
-        await addConsoleLine(consoleDiv, `[⟳] Processing ${type} request...`, 'info');
-        await delay(600);
-        
-        const success = Math.random() > 0.1;
-        if (success) {
-            await addConsoleLine(consoleDiv, '[✓] Authentication successful!', 'success');
-            await delay(300);
-            await addConsoleLine(consoleDiv, `[✓] ${getSuccessMessage(type)}`, 'success');
-            showToast('Operation completed successfully!', 'success');
-        } else {
-            await addConsoleLine(consoleDiv, '[✗] Operation failed', 'error');
-            await addConsoleLine(consoleDiv, '[✗] Invalid credentials or server error', 'error');
-            showToast('Operation failed!', 'error');
-        }
-    }
-
-    function getSuccessMessage(type) {
-        const msgs = {
-            'Bind New Email': 'Email bound successfully!',
-            'Cancel Request': 'Request cancelled successfully',
-            'Unbind (Security Code)': 'Account unbound successfully',
-            'Unbind (OTP)': 'Account unbound successfully',
-            'Change Email (OTP)': 'Email changed successfully',
-            'Change Email (Security Code)': 'Email changed successfully',
-            'Check Bind Info': 'Bind information retrieved'
-        };
-        return msgs[type] || 'Operation completed';
-    }
-
     function openModal(title, fieldsHtml) {
         const modal = document.getElementById('toolModal');
         const modalContent = document.getElementById('modalContent');
         modalContent.innerHTML = `
-            <div class="modal-header">
-                <h2><i class="fas fa-terminal"></i> ${title}</h2>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
-            </div>
+            <div class="modal-header"><h2><i class="fas fa-terminal"></i> ${title}</h2><button class="close-modal" onclick="closeModal()">&times;</button></div>
             ${fieldsHtml}
             <div class="console-output" id="modalConsole"></div>
             <button class="copy-btn" onclick="copyConsole()"><i class="fas fa-copy"></i> Copy Console Output</button>
@@ -620,23 +209,187 @@
         modal.style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('toolModal').style.display = 'none';
-    }
+    function closeModal() { document.getElementById('toolModal').style.display = 'none'; }
+    function copyConsole() { const text = document.getElementById('modalConsole')?.innerText; if(text) { navigator.clipboard.writeText(text); showToast('Copied!', 'success'); } }
 
-    function copyConsole() {
-        const consoleDiv = document.getElementById('modalConsole');
-        if (consoleDiv) {
-            const text = consoleDiv.innerText;
-            navigator.clipboard.writeText(text);
-            showToast('Console output copied!', 'success');
+    async function executeApiAction(action, apiCall, consoleDiv) {
+        await addConsoleLine(consoleDiv, '[⟳] Initializing secure connection...', 'info');
+        await delay(400);
+        await addConsoleLine(consoleDiv, '[⟳] Connecting to RISHU API...', 'info');
+        await delay(400);
+        await addConsoleLine(consoleDiv, `[⟳] Processing ${action}...`, 'info');
+        await delay(600);
+        
+        try {
+            const result = await apiCall();
+            if (result.success) {
+                await addConsoleLine(consoleDiv, '[✓] Authentication successful!', 'success');
+                await delay(300);
+                await addConsoleLine(consoleDiv, `[✓] ${result.message || action + ' completed successfully!'}`, 'success');
+                showToast('Operation completed!', 'success');
+            } else {
+                await addConsoleLine(consoleDiv, '[✗] Operation failed', 'error');
+                await addConsoleLine(consoleDiv, `[✗] ${result.error || 'Unknown error'}`, 'error');
+                showToast('Operation failed!', 'error');
+            }
+        } catch (error) {
+            await addConsoleLine(consoleDiv, '[✗] API Error', 'error');
+            await addConsoleLine(consoleDiv, `[✗] ${error.message}`, 'error');
+            showToast('API Error!', 'error');
         }
     }
 
-    async function executeAction(action, inputs, consoleDiv) {
-        await simulateOperation(action, inputs, consoleDiv);
+    // ==================== TOOL MODALS ====================
+    function openBindModal() {
+        openModal('Bind New Email', `
+            <div class="form-group"><label>ACCESS TOKEN</label><input type="password" id="bindToken" placeholder="Enter access token"></div>
+            <div class="form-group"><label>NEW EMAIL</label><input type="email" id="bindEmail" placeholder="Enter email address"></div>
+            <div class="form-group"><label>OTP CODE</label><input type="password" id="bindOtp" placeholder="Enter OTP"></div>
+            <div class="form-group"><label>SECURITY CODE</label><input type="password" id="bindSec" placeholder="Set security code"></div>
+            <button class="auth-btn gradient-btn" onclick="submitBind()">SUBMIT BIND REQUEST</button>
+        `);
     }
 
+    async function submitBind() {
+        const token = document.getElementById('bindToken')?.value;
+        const email = document.getElementById('bindEmail')?.value;
+        const otp = document.getElementById('bindOtp')?.value;
+        const sec = document.getElementById('bindSec')?.value;
+        if (!token || !email || !otp || !sec) { showToast('All fields required!', 'error'); return; }
+        const consoleDiv = document.getElementById('modalConsole');
+        if(consoleDiv) consoleDiv.innerHTML = '';
+        await executeApiAction('Bind New Email', () => bindEmail(token, email, otp, sec), consoleDiv);
+    }
+
+    function openCancelModal() {
+        openModal('Cancel Pending Request', `
+            <div class="form-group"><label>ACCESS TOKEN</label><input type="password" id="cancelToken" placeholder="Enter access token"></div>
+            <button class="auth-btn gradient-btn" onclick="submitCancel()">CANCEL REQUEST</button>
+        `);
+    }
+
+    async function submitCancel() {
+        const token = document.getElementById('cancelToken')?.value;
+        if (!token) { showToast('Access token required!', 'error'); return; }
+        const consoleDiv = document.getElementById('modalConsole');
+        if(consoleDiv) consoleDiv.innerHTML = '';
+        await executeApiAction('Cancel Request', () => cancelRequest(token), consoleDiv);
+    }
+
+    function openUnbindModal() {
+        openModal('Unbind Account', `
+            <div class="method-selector"><button class="method-btn ${currentMethod.unbind === 'sec' ? 'active' : ''}" onclick="setUnbindMethod('sec')">Security Code</button><button class="method-btn ${currentMethod.unbind === 'otp' ? 'active' : ''}" onclick="setUnbindMethod('otp')">OTP</button></div>
+            <div class="form-group"><label>ACCESS TOKEN</label><input type="password" id="unbindToken" placeholder="Enter access token"></div>
+            <div id="unbindSecFields" style="${currentMethod.unbind === 'sec' ? 'display:block' : 'display:none'}"><div class="form-group"><label>SECURITY CODE</label><input type="password" id="unbindSecCode" placeholder="Enter security code"></div></div>
+            <div id="unbindOtpFields" style="${currentMethod.unbind === 'otp' ? 'display:block' : 'display:none'}"><div class="form-group"><label>EMAIL</label><input type="email" id="unbindOtpEmail" placeholder="Enter email"></div><div class="form-group"><label>OTP CODE</label><input type="password" id="unbindOtpCode" placeholder="Enter OTP"></div></div>
+            <button class="auth-btn gradient-btn" onclick="submitUnbind()">UNBIND ACCOUNT</button>
+        `);
+    }
+
+    function setUnbindMethod(method) {
+        currentMethod.unbind = method;
+        const secFields = document.getElementById('unbindSecFields');
+        const otpFields = document.getElementById('unbindOtpFields');
+        if(secFields) secFields.style.display = method === 'sec' ? 'block' : 'none';
+        if(otpFields) otpFields.style.display = method === 'otp' ? 'block' : 'none';
+        document.querySelectorAll('#unbindModal .method-btn')?.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    async function submitUnbind() {
+        const token = document.getElementById('unbindToken')?.value;
+        if (!token) { showToast('Access token required!', 'error'); return; }
+        const consoleDiv = document.getElementById('modalConsole');
+        if(consoleDiv) consoleDiv.innerHTML = '';
+        if (currentMethod.unbind === 'sec') {
+            const secCode = document.getElementById('unbindSecCode')?.value;
+            if (!secCode) { showToast('Security code required!', 'error'); return; }
+            await executeApiAction('Unbind (Security Code)', () => unbindWithSec(token, secCode), consoleDiv);
+        } else {
+            const email = document.getElementById('unbindOtpEmail')?.value;
+            const otp = document.getElementById('unbindOtpCode')?.value;
+            if (!email || !otp) { showToast('Email and OTP required!', 'error'); return; }
+            await executeApiAction('Unbind (OTP)', () => unbindWithOtp(token, email, otp), consoleDiv);
+        }
+    }
+
+    function openChangeEmailModal() {
+        openModal('Change Email', `
+            <div class="method-selector"><button class="method-btn ${currentMethod.change === 'otp' ? 'active' : ''}" onclick="setChangeMethod('otp')">OTP Method</button><button class="method-btn ${currentMethod.change === 'sec' ? 'active' : ''}" onclick="setChangeMethod('sec')">Security Code</button></div>
+            <div class="form-group"><label>ACCESS TOKEN</label><input type="password" id="changeToken" placeholder="Enter access token"></div>
+            <div class="form-group"><label>CURRENT EMAIL</label><input type="email" id="changeOldEmail" placeholder="Current email"></div>
+            <div class="form-group"><label>NEW EMAIL</label><input type="email" id="changeNewEmail" placeholder="New email address"></div>
+            <div id="changeOtpFields" style="${currentMethod.change === 'otp' ? 'display:block' : 'display:none'}"><div class="form-group"><label>OTP CODE (from old email)</label><input type="password" id="changeOldOtp" placeholder="Enter OTP from current email"></div><div class="form-group"><label>OTP CODE (from new email)</label><input type="password" id="changeNewOtp" placeholder="Enter OTP from new email"></div></div>
+            <div id="changeSecFields" style="${currentMethod.change === 'sec' ? 'display:block' : 'display:none'}"><div class="form-group"><label>SECURITY CODE</label><input type="password" id="changeSecCode" placeholder="Enter security code"></div><div class="form-group"><label>OTP CODE (from new email)</label><input type="password" id="changeSecNewOtp" placeholder="Enter OTP from new email"></div></div>
+            <button class="auth-btn gradient-btn" onclick="submitChangeEmail()">CHANGE EMAIL</button>
+        `);
+    }
+
+    function setChangeMethod(method) {
+        currentMethod.change = method;
+        const otpFields = document.getElementById('changeOtpFields');
+        const secFields = document.getElementById('changeSecFields');
+        if(otpFields) otpFields.style.display = method === 'otp' ? 'block' : 'none';
+        if(secFields) secFields.style.display = method === 'sec' ? 'block' : 'none';
+        document.querySelectorAll('#changeModal .method-btn')?.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    async function submitChangeEmail() {
+        const token = document.getElementById('changeToken')?.value;
+        const oldEmail = document.getElementById('changeOldEmail')?.value;
+        const newEmail = document.getElementById('changeNewEmail')?.value;
+        if (!token || !oldEmail || !newEmail) { showToast('Token and emails required!', 'error'); return; }
+        const consoleDiv = document.getElementById('modalConsole');
+        if(consoleDiv) consoleDiv.innerHTML = '';
+        if (currentMethod.change === 'otp') {
+            const oldOtp = document.getElementById('changeOldOtp')?.value;
+            const newOtp = document.getElementById('changeNewOtp')?.value;
+            if (!oldOtp || !newOtp) { showToast('Both OTP codes required!', 'error'); return; }
+            await executeApiAction('Change Email (OTP)', () => changeEmailOtp(token, oldEmail, newEmail, oldOtp, newOtp), consoleDiv);
+        } else {
+            const secCode = document.getElementById('changeSecCode')?.value;
+            const newOtp = document.getElementById('changeSecNewOtp')?.value;
+            if (!secCode || !newOtp) { showToast('Security code and new email OTP required!', 'error'); return; }
+            await executeApiAction('Change Email (Security Code)', () => changeEmailSec(token, oldEmail, newEmail, secCode, newOtp), consoleDiv);
+        }
+    }
+
+    function openCheckInfoModal() {
+        openModal('Check Bind Info', `
+            <div class="form-group"><label>ACCESS TOKEN</label><input type="password" id="infoToken" placeholder="Enter access token"></div>
+            <button class="auth-btn gradient-btn" onclick="submitCheckInfo()">CHECK INFO</button>
+        `);
+    }
+
+    async function submitCheckInfo() {
+        const token = document.getElementById('infoToken')?.value;
+        if (!token) { showToast('Access token required!', 'error'); return; }
+        const consoleDiv = document.getElementById('modalConsole');
+        if(consoleDiv) consoleDiv.innerHTML = '';
+        await executeApiAction('Check Bind Info', () => getBindInfo(token), consoleDiv);
+    }
+
+    function openEatModal() {
+        openModal('EAT to Access Token', `
+            <div class="form-group"><label>EAT TOKEN OR URL</label><input type="text" id="eatInput" placeholder="Enter EAT token or paste URL"></div>
+            <button class="auth-btn gradient-btn" onclick="submitEat()">CONVERT</button>
+        `);
+    }
+
+    async function submitEat() {
+        let eatInput = document.getElementById('eatInput')?.value;
+        if (!eatInput) { showToast('EAT token required!', 'error'); return; }
+        if (eatInput.includes('eat=')) {
+            const match = eatInput.match(/eat=([a-fA-F0-9]+)/);
+            if (match) eatInput = match[1];
+        }
+        const consoleDiv = document.getElementById('modalConsole');
+        if(consoleDiv) consoleDiv.innerHTML = '';
+        await executeApiAction('EAT to Access Token', () => eatToAccessToken(eatInput), consoleDiv);
+    }
+
+    // ==================== NAVIGATION ====================
     function showHome() {
         document.getElementById('homeSection').style.display = 'block';
         document.getElementById('toolsSection').style.display = 'none';
@@ -658,137 +411,13 @@
                 <div class="tool-card" onclick="openUnbindModal()"><i class="fas fa-unlock-alt"></i><h3>Unbind Account</h3><p>Remove email with OTP or Security Code</p></div>
                 <div class="tool-card" onclick="openChangeEmailModal()"><i class="fas fa-exchange-alt"></i><h3>Change Email</h3><p>Update recovery email</p></div>
                 <div class="tool-card" onclick="openCheckInfoModal()"><i class="fas fa-search"></i><h3>Check Bind Info</h3><p>View current email status</p></div>
+                <div class="tool-card" onclick="openEatModal()"><i class="fas fa-exchange-alt"></i><h3>EAT to Token</h3><p>Convert EAT token to access token</p></div>
             </div>
         `;
         document.getElementById('toolsSection').innerHTML = toolsHtml;
     }
 
-    function openBindModal() {
-        openModal('Bind New Email', `
-            <div class="form-group"><label>USER ID / ACCESS TOKEN</label><input type="password" id="bindToken" placeholder="Enter access token"></div>
-            <div class="form-group"><label>NEW EMAIL</label><input type="email" id="bindEmail" placeholder="Enter email address"></div>
-            <div class="form-group"><label>OTP CODE</label><input type="password" id="bindOtp" placeholder="Enter OTP"></div>
-            <div class="form-group"><label>SECURITY CODE</label><input type="password" id="bindSec" placeholder="Set security code"></div>
-            <button class="auth-btn gradient-btn" onclick="submitBind()">SUBMIT BIND REQUEST</button>
-        `);
-    }
-
-    async function submitBind() {
-        const token = document.getElementById('bindToken')?.value;
-        const email = document.getElementById('bindEmail')?.value;
-        const otp = document.getElementById('bindOtp')?.value;
-        const sec = document.getElementById('bindSec')?.value;
-        if (!token || !email || !otp || !sec) { showToast('All fields required!', 'error'); return; }
-        const consoleDiv = document.getElementById('modalConsole');
-        if(consoleDiv) consoleDiv.innerHTML = '';
-        await executeAction('Bind New Email', { token, email, otp, sec }, consoleDiv);
-    }
-
-    function openCancelModal() {
-        openModal('Cancel Pending Request', `
-            <div class="form-group"><label>USER ID / ACCESS TOKEN</label><input type="password" id="cancelToken" placeholder="Enter access token"></div>
-            <button class="auth-btn gradient-btn" onclick="submitCancel()">CANCEL REQUEST</button>
-        `);
-    }
-
-    async function submitCancel() {
-        const token = document.getElementById('cancelToken')?.value;
-        if (!token) { showToast('Access token required!', 'error'); return; }
-        const consoleDiv = document.getElementById('modalConsole');
-        if(consoleDiv) consoleDiv.innerHTML = '';
-        await executeAction('Cancel Request', { token }, consoleDiv);
-    }
-
-    function openUnbindModal() {
-        openModal('Unbind Account', `
-            <div class="method-selector">
-                <button class="method-btn ${currentMethod.unbind === 'sec' ? 'active' : ''}" onclick="setUnbindMethod('sec')">Security Code</button>
-                <button class="method-btn ${currentMethod.unbind === 'otp' ? 'active' : ''}" onclick="setUnbindMethod('otp')">OTP</button>
-            </div>
-            <div class="form-group"><label>USER ID / ACCESS TOKEN</label><input type="password" id="unbindToken" placeholder="Enter access token"></div>
-            <div id="unbindSecFields" style="${currentMethod.unbind === 'sec' ? 'display:block' : 'display:none'}">
-                <div class="form-group"><label>SECURITY CODE</label><input type="password" id="unbindSecCode" placeholder="Enter security code"></div>
-            </div>
-            <div id="unbindOtpFields" style="${currentMethod.unbind === 'otp' ? 'display:block' : 'display:none'}">
-                <div class="form-group"><label>EMAIL</label><input type="email" id="unbindOtpEmail" placeholder="Enter email"></div>
-                <div class="form-group"><label>OTP CODE</label><input type="password" id="unbindOtpCode" placeholder="Enter OTP"></div>
-            </div>
-            <button class="auth-btn gradient-btn" onclick="submitUnbind()">UNBIND ACCOUNT</button>
-        `);
-    }
-
-    function setUnbindMethod(method) {
-        currentMethod.unbind = method;
-        const secFields = document.getElementById('unbindSecFields');
-        const otpFields = document.getElementById('unbindOtpFields');
-        if(secFields) secFields.style.display = method === 'sec' ? 'block' : 'none';
-        if(otpFields) otpFields.style.display = method === 'otp' ? 'block' : 'none';
-        document.querySelectorAll('#unbindModal .method-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-    }
-
-    async function submitUnbind() {
-        const token = document.getElementById('unbindToken')?.value;
-        if (!token) { showToast('Access token required!', 'error'); return; }
-        const consoleDiv = document.getElementById('modalConsole');
-        if(consoleDiv) consoleDiv.innerHTML = '';
-        const action = currentMethod.unbind === 'sec' ? 'Unbind (Security Code)' : 'Unbind (OTP)';
-        await executeAction(action, { token }, consoleDiv);
-    }
-
-    function openChangeEmailModal() {
-        openModal('Change Email', `
-            <div class="method-selector">
-                <button class="method-btn ${currentMethod.change === 'otp' ? 'active' : ''}" onclick="setChangeMethod('otp')">OTP Method</button>
-                <button class="method-btn ${currentMethod.change === 'sec' ? 'active' : ''}" onclick="setChangeMethod('sec')">Security Code</button>
-            </div>
-            <div class="form-group"><label>USER ID / ACCESS TOKEN</label><input type="password" id="changeToken" placeholder="Enter access token"></div>
-            <div class="form-group"><label>NEW EMAIL</label><input type="email" id="changeNewEmail" placeholder="New email address"></div>
-            <div id="changeOtpFields" style="${currentMethod.change === 'otp' ? 'display:block' : 'display:none'}">
-                <div class="form-group"><label>OTP CODE</label><input type="password" id="changeOtp" placeholder="Enter OTP"></div>
-            </div>
-            <div id="changeSecFields" style="${currentMethod.change === 'sec' ? 'display:block' : 'display:none'}">
-                <div class="form-group"><label>SECURITY CODE</label><input type="password" id="changeSec" placeholder="Enter security code"></div>
-            </div>
-            <button class="auth-btn gradient-btn" onclick="submitChangeEmail()">CHANGE EMAIL</button>
-        `);
-    }
-
-    function setChangeMethod(method) {
-        currentMethod.change = method;
-        const otpFields = document.getElementById('changeOtpFields');
-        const secFields = document.getElementById('changeSecFields');
-        if(otpFields) otpFields.style.display = method === 'otp' ? 'block' : 'none';
-        if(secFields) secFields.style.display = method === 'sec' ? 'block' : 'none';
-        document.querySelectorAll('#changeModal .method-btn').forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-    }
-
-    async function submitChangeEmail() {
-        const token = document.getElementById('changeToken')?.value;
-        const newEmail = document.getElementById('changeNewEmail')?.value;
-        if (!token || !newEmail) { showToast('Token and new email required!', 'error'); return; }
-        const consoleDiv = document.getElementById('modalConsole');
-        if(consoleDiv) consoleDiv.innerHTML = '';
-        const action = currentMethod.change === 'otp' ? 'Change Email (OTP)' : 'Change Email (Security Code)';
-        await executeAction(action, { token, newEmail }, consoleDiv);
-    }
-
-    function openCheckInfoModal() {
-        openModal('Check Bind Info', `
-            <div class="form-group"><label>USER ID / ACCESS TOKEN</label><input type="password" id="infoToken" placeholder="Enter access token"></div>
-            <button class="auth-btn gradient-btn" onclick="submitCheckInfo()">CHECK INFO</button>
-        `);
-    }
-
-    async function submitCheckInfo() {
-        const token = document.getElementById('infoToken')?.value;
-        if (!token) { showToast('Access token required!', 'error'); return; }
-        const consoleDiv = document.getElementById('modalConsole');
-        if(consoleDiv) consoleDiv.innerHTML = '';
-        await executeAction('Check Bind Info', { token }, consoleDiv);
-    }
-
+    // ==================== AUTH ====================
     function handleLogin() {
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value.trim();
@@ -834,6 +463,7 @@
         document.getElementById('mainContent').classList.toggle('sidebar-open');
     }
 
+    // ==================== INIT ====================
     document.querySelectorAll('.auth-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
